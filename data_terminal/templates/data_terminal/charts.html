@@ -10,15 +10,13 @@
     <div>
         <form method="POST">
             {% csrf_token %}
-            <input type="datetime" name="fromto" placeholder="datetime range" id="fromto" style="width: 300px;"
-                value="{{ fromto }}" />
+            <input type="datetime" name="fromto" placeholder="datetime range" id="fromto" style="width: 300px;" value="{{ fromto }}"/>
+            
             <button type="submit">Filter</button>
         </form>
     </div>
     <div id="chartContainer" style="height: 400px;width: 1200px">
     </div>
-
-    <!-- charts  -->
     <script type="text/javascript">
         window.onload = function () {
             var chart = new CanvasJS.Chart("chartContainer",
@@ -42,8 +40,7 @@
         });
 
         chart.render();
-
-        // date and time picker 
+        
         flatpickr("#fromto", {
             enableTime: true,
             time_24hr: true,

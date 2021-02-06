@@ -1,20 +1,23 @@
 import csv, io
 from django.shortcuts import render
 from django.contrib import messages
-from .models import data_terminal
+from .models import Data_Terminal
+from datetime import datetime, timedelta
+import json
 # Create your views here.
 
 # Create your views here.
-# one parameter named request
+
+# uploading the csv to datebase
 def csv_upload(request):
     # declaring template
     template = "data_terminal/upload_data.html"
 
-    data = data_terminal.objects.all()
+    data = Data_Terminal.objects.all()
 
     # GET request returns the value of the data with the specified key.
     if request.method == "GET":
-        return render(request, template, prompt)
+        return render(request, template)
 
     csv_file = request.FILES['file']
 
@@ -26,13 +29,9 @@ def csv_upload(request):
     io_string = io.StringIO(data_set)
     next(io_string)
     for column in csv.reader(io_string, delimiter=',', quotechar="|"):
-        _, created = data_terminal.objects.update_or_create(
+        _, created = Data_Terminal.objects.update_or_create(
             SW=column[0],
-            T1=column[1],
-            T2=column[2],
-            T3=column[3],
-            T4=column[4],
-            T5=column[5],
+            Status=column[1] or column[2] or column[3] or column[4] or column[5],
             TS=column[6]
         )
     context = {}
@@ -41,6 +40,49 @@ def csv_upload(request):
 
 
 
+# views to show the charts 
+def charts(request):
+    template = "data_terminal/charts.html"
+    fromto = request.POST['fromto']
+    dt_range = fromto.split(' to ')
+    data_s1 = []
+    data_s2 = []
+    data_s3 = []
+    
+    if len(dt_range) > 0:
+        from_ts = int(datetime.strptime(dt_range[0], '%Y-%m-%d %H:%M').strftime("%s"))
+        to_ts = int(datetime.strptime(dt_range[1], '%Y-%m-%d %H:%M').strftime("%s"))
+        
+        data_s1 = Data_Terminal.objects.filter(SW='S1', TS__range=(from_ts, to_ts)).order_by('TS')
+        data_s2 = Data_Terminal.objects.filter(SW='S2', TS__range=(from_ts, to_ts)).order_by('TS')
+        data_s3 = Data_Terminal.objects.filter(SW='S3', TS__range=(from_ts, to_ts)).order_by('TS')
 
-def showdata(request):
-    return render(request, showdata.html)
+    else: 
+        data_s1 = Data_Terminal.objects.filter(SW='S1').order_by('TS')
+        data_s2 = Data_Terminal.objects.filter(SW='S2').order_by('TS')
+        data_s3 = Data_Terminal.objects.filter(SW='S3').order_by('TS')
+
+
+    sw1_data = []
+    sw2_data = []
+    sw3_data = []
+
+    for sw in data_s1:
+        item: dict =  {'x': sw.TS*1000 , 'y': sw.Status}
+        sw1_data.append(item)
+
+    for sw in data_s2:
+        item: dict =  {'x': sw.TS*1000 , 'y': sw.Status}
+        sw1_data.append(item)
+    
+    for sw in data_s3:
+        item: dict =  {'x': sw.TS*1000 , 'y': sw.Status}
+        sw1_data.append(item)
+
+    context = {
+        'sw1_data':json.dumps(sw1_data),
+        'sw2_data':json.dumps(sw2_data),
+        'sw3_data':json.dumps(sw3_data),
+        'fromto': fromto
+    }
+    return render(request, template, context)

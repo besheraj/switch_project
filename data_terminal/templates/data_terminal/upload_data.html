@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
+
 <body>
     {% if messages %}
-        {% for message in messages %}
-            <div>
-<!--                | means OR operator-->
-                <strong>{{message|safe}}</strong>
-            </div>
-        {% endfor %}
+    {% for message in messages %}
+    <div>
+        <!--                | means OR operator-->
+        <strong>{{message|safe}}</strong>
+    </div>
+    {% endfor %}
     {% else %}
     {{order}}
     <form action="" method="POST" enctype="multipart/form-data">
@@ -22,6 +24,9 @@
         <button type="submit">Upload</button>
     </form>
     {% endif %}
-
+    {% for profile in profiles %}
+    {{profile.name}}
+    {% endfor %}
 </body>
+
 </html>

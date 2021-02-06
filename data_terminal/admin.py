@@ -1,6 +1,6 @@
 from django.contrib import admin
 # Register your models here.
-from .models import data_terminal
+from .models import Data_Terminal
 
 
-admin.site.register(data_terminal)
+admin.site.register(Data_Terminal)

@@ -43,24 +43,47 @@ def csv_upload(request):
 # views to show the charts 
 def charts(request):
     template = "data_terminal/charts.html"
-    fromto = request.POST['fromto']
-    dt_range = fromto.split(' to ')
-    data = []
-    if len(dt_range) > 0:
-        from_ts = int(datetime.strptime(dt_range[0], '%Y-%m-%d %H:%M').strftime("%s"))
-        to_ts = int(datetime.strptime(dt_range[1], '%Y-%m-%d %H:%M').strftime("%s"))
-        
-        data = Data_Terminal.objects.filter(SW='S1', TS__range=(from_ts, to_ts)).order_by('TS')
-    else: 
-        data = Data_Terminal.objects.filter(SW='S1').order_by('TS')
-    sw1_data = []
+    s1_data = []
+    s2_data = []
+    s3_data = []
 
-    for sw in data:
+    if request.method == 'POST':
+        fromto = request.POST['fromto']
+        dt_range = fromto.split(' to ')
+        from_ts = int(datetime.strptime(dt_range[0], '%Y-%m-%d %H:%M').strftime("%s"))
+        to_ts = int(datetime.strptime(dt_range[1], '%Y-%m-%d %H:%M').strftime("%s"))       
+        s1_data = Data_Terminal.objects.filter(SW='S1', TS__range=(from_ts, to_ts)).order_by('TS')
+        s2_data = Data_Terminal.objects.filter(SW='S2', TS__range=(from_ts, to_ts)).order_by('TS')
+        s3_data = Data_Terminal.objects.filter(SW='S3', TS__range=(from_ts, to_ts)).order_by('TS')
+        
+    else: 
+        s1_data = Data_Terminal.objects.filter(SW='S1').order_by('TS')
+        s2_data = Data_Terminal.objects.filter(SW='S2').order_by('TS')
+        s3_data = Data_Terminal.objects.filter(SW='S3').order_by('TS')
+
+    sw1_data = []
+    sw2_data = []
+    sw3_data = []
+
+    for sw in s1_data:
         item: dict =  {'x': sw.TS*1000 , 'y': sw.Status}
         sw1_data.append(item)
+    
+
+    for sw in s2_data:
+        item: dict =  {'x': sw.TS*1000 , 'y': sw.Status}
+        sw2_data.append(item)
+    
+
+    for sw in s3_data:
+        item: dict =  {'x': sw.TS*1000 , 'y': sw.Status}
+        sw3_data.append(item)
+    
 
     context = {
         'sw1_data':json.dumps(sw1_data),
-        'fromto': fromto
+        'sw2_data':json.dumps(sw2_data),
+        'sw3_data':json.dumps(sw3_data),
+
     }
     return render(request, template, context)

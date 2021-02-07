@@ -8,5 +8,10 @@ after downloading from github repository
         'NAME': 'data_terminal',
         'USER': 'djangouser',
         'PASSWORD': '12345'
-2- Link the project to MYSQL Database.
-3- Upload the CSV File.
+3- Run migrations by the follwoing commands:
+
+python3 manage.py makemigrations
+python3 manage.py migrate
+
+4- Link the project to MYSQL Database.
+5- Upload the CSV File.

@@ -6,18 +6,30 @@
     <title>Alert Report</title>
 </head>
 <body>
+<section style="text-align: center;">
+    <table style="border: 3px solid;width: 100%;">
+        <h1>
+            Alert Report
+        </h1>
+        <tr style="border: 2px solid; background-color: blue; color: aliceblue;">
+            <td style="border: 1px solid; font-weight: 700;">No</td>
+            <td style="border: 1px solid; font-weight: 700;">Switch Number</td>
+            <td style="border: 1px solid; font-weight: 700;">Status</td>
+            <td style="border: 1px solid; font-weight: 700;">Date</td>
+          </tr>
 
-    <table>
+
         {% for data in alertreport %}
-        <tr>
-          <td>{{ data.PK }}</td>
-          <td>{{ data.SW }}</td>
-          <td>{{ data.Ping_Status }}</td>
-          <td>{{ data.TS }}</td>
+        <tr style="border: 2px solid; background-color: rgb(160, 160, 216); color: rgb(4, 25, 44);">
+          <td style="border: 1px solid;">{{ data.PK }}</td>
+          <td style="border: 1px solid;">{{ data.SW }}</td>
+          <td style="border: 1px solid;">{{ data.Ping_Status }}</td>
+          <td style="border: 1px solid;">{{ data.TS }}</td>
         </tr>
         {% endfor %}
 
       </table>
+    </section>
 
 </body>
 </html>

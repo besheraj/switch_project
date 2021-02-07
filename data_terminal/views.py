@@ -7,8 +7,8 @@ from datetime import datetime
 import json
 # Create your views here.
 
-# Create your views here.
-
+def index(request):
+    return render(request, 'data_terminal/index.html')
 # uploading the csv to datebase
 def csv_upload(request):
     # declaring template

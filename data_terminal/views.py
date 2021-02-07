@@ -31,7 +31,7 @@ def csv_upload(request):
     for column in csv.reader(io_string, delimiter=',', quotechar="|"):
         _, created = Data_Terminal.objects.update_or_create(
             SW=column[0],
-            Status=column[1] or column[2] or column[3] or column[4] or column[5],
+            Status= '1' in (column[1] , column[2] , column[3] , column[4] , column[5]),
             TS=column[6]
         )
     context = {}
@@ -46,7 +46,7 @@ def charts(request):
     s1_data = []
     s2_data = []
     s3_data = []
-
+    fromto = '2019-11-29 00:00 to 2019-11-30 23:59' # available test data
     if request.method == 'POST':
         fromto = request.POST['fromto']
         dt_range = fromto.split(' to ')
@@ -84,6 +84,8 @@ def charts(request):
         'sw1_data':json.dumps(sw1_data),
         'sw2_data':json.dumps(sw2_data),
         'sw3_data':json.dumps(sw3_data),
+        'fromto':fromto
 
     }
     return render(request, template, context)
+

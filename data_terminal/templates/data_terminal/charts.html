@@ -11,7 +11,7 @@
         <form method="POST">
             {% csrf_token %}
             <input type="datetime" name="fromto" placeholder="datetime range" id="fromto" style="width: 300px;"
-                value="{{ fromto }}" />
+                value="{{ fromto}} " />
 
             <button type="submit">Filter</button>
         </form>

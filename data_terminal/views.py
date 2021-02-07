@@ -1,8 +1,9 @@
 import csv, io
+from django.forms.fields import MultiValueField
 from django.shortcuts import render
 from django.contrib import messages
 from .models import Data_Terminal
-from datetime import datetime, timedelta
+from datetime import datetime 
 import json
 # Create your views here.
 
@@ -89,3 +90,18 @@ def charts(request):
     }
     return render(request, template, context)
 
+def alertreport(request):
+    tepmlate = "data_terminal/alertreport.html"
+    ping_lost_data = Data_Terminal.objects.filter(Status=0).order_by('TS')
+    no =0
+    alertreport = []
+    for lost in ping_lost_data:
+        no += 1
+        report: dict= {'PK': no ,'SW': lost.SW , 'Ping_Status': 'Ping Lost', 'TS': datetime.fromtimestamp(float(lost.TS)) }
+        alertreport.append(report)
+
+
+    context = {
+        'alertreport' : alertreport
+    }
+    return render(request,tepmlate, context)

@@ -7,3 +7,5 @@ class Data_Terminal(models.Model):
     Status = models.IntegerField()
     TS = models.IntegerField()
 
+
+
